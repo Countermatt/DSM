@@ -1,0 +1,39 @@
+ALL: default
+
+CC           = gcc
+CLINKER      = $(CC)
+OPTFLAGS     = -O0
+
+
+SHELL = /bin/sh
+
+CFLAGS  =   -DREENTRANT
+CCFLAGS = $(CFLAGS)
+LIBS =  -lpthread
+EXECS = init exemple
+
+default: $(EXECS)
+
+
+exemple: exemple.o dsm.o common.o
+	$(CLINKER) $(OPTFLAGS) -o exemple exemple.o dsm.o common.o  $(LIBS)
+	mv exemple bin
+	mv *o .obj
+
+clean:
+	@-/bin/rm -f *.o *~ PI* $(EXECS) *.out core
+	rm -rf bin
+	rm -rf .obj
+
+.c:
+	$(CC) $(CFLAGS) -o $* $< $(LIBS)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+.o:
+	${CLINKER} $(OPTFLAGS) -o $* $*.o $(LIBS)
+
+init: clean
+		mkdir bin
+		mkdir .obj
